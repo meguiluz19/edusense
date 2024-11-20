@@ -76,7 +76,7 @@ $password = $_SESSION['password'];
     <div class="container">
         <!-- Advertencia de guardar credenciales -->
         <div class="advertencia">
-            <strong>¡Advertencia!</strong> Guarda tus credenciales de inicio de sesión. Si las pierdes, deberás ponerte en contacto con el soporte técnico para recuperarlas.
+            <strong>¡Advertencia!</strong> Guarda tus credenciales de inicio de sesión. Las necesitarás para futuros inicios de sesión.
         </div>
         
         <h1>Credenciales Generadas</h1>
