@@ -1,45 +1,63 @@
 <?php
-// Inicia la sesión
 session_start();
 
-// Configuración de la base de datos (ajusta estos valores)
-$host = 'localhost'; // o tu host
-$dbname = 'compra';
-$username = 'meguiluzg02';
-$password = '123';
+// Conexión a la base de datos
+$servername = "localhost";
+$username = "meguiluzg02";
+$password = "123";
+$dbname = "compra";
 
-// Conectar a la base de datos
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Error al conectar a la base de datos: " . $e->getMessage());
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Verificar si se enviaron los datos del formulario
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+// Obtener los datos del formulario
+$usuario = $conn->real_escape_string($_POST['usuario']);
+$passwordInput = $conn->real_escape_string($_POST['pass']);
+$ip_address = $_SERVER['REMOTE_ADDR'];  // Obtener la IP del usuario
 
-    // Consulta para verificar las credenciales
-    $sql = "SELECT * FROM usuarios WHERE email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+// Verificar los intentos de acceso fallidos desde esta IP
+$sql_intentos = "SELECT COUNT(*) AS intentos FROM intentos_acceso WHERE ip_address = '$ip_address' AND fecha > (NOW() - INTERVAL 15 MINUTE)";
+$result_intentos = $conn->query($sql_intentos);
+$row = $result_intentos->fetch_assoc();
 
-    // Verificar si el usuario existe y la contraseña es correcta
-    if ($usuario && password_verify($password, $usuario['password'])) {
-        // Si las credenciales son correctas, guardar los datos en la sesión
-        $_SESSION['usuario'] = $usuario['email'];
-        $_SESSION['id'] = $usuario['id'];
-
-        // Redirigir a la página de usuario o dashboard
-        header('Location: usuario.php');
-        exit;
-    } else {
-        // Si las credenciales no son correctas, mostrar un error
-        echo "Correo electrónico o contraseña incorrectos.";
-    }
+if ($row['intentos'] >= 5) {
+    echo "<script>
+            alert('Ha superado el número máximo de intentos fallidos. Intente de nuevo más tarde.');
+            window.location.href = 'login.html';
+          </script>";
+    exit;
 }
+
+// Verificar si las credenciales son correctas
+$sql = "SELECT * FROM compras WHERE usuario = '$usuario' AND password = '$passwordInput'";
+$result = $conn->query($sql);
+
+if ($result->num_rows === 1) {
+    // Credenciales válidas
+    $user = $result->fetch_assoc();
+    $_SESSION['usuario'] = $user['usuario'];
+    $_SESSION['nombre'] = $user['nombre'];
+
+    // Actualizar el estado de "logueado" en la base de datos
+    $sql_update = "UPDATE compras SET usuario_logueado = 1 WHERE usuario = '$usuario'";
+    $conn->query($sql_update);
+
+    // Redirigir a la página protegida
+    header("Location: dashboard.php");
+    exit;
+} else {
+    // Registrar el intento fallido
+    $sql_intento_fallido = "INSERT INTO intentos_acceso (usuario, ip_address) VALUES ('$usuario', '$ip_address')";
+    $conn->query($sql_intento_fallido);
+
+    echo "<script>
+            alert('Credenciales incorrectas. Inténtelo de nuevo.');
+            window.location.href = 'login.html';
+          </script>";
+}
+
+$conn->close();
 ?>
