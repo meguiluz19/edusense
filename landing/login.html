@@ -12,6 +12,29 @@
     <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <style>
+        /* Diseño profesional para "Date de Alta" */
+        .register-btn {
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            background: linear-gradient(45deg, #1d3557, #457b9d);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            background: linear-gradient(45deg, #457b9d, #1d3557);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+        }
+    </style>
 </head>
 <body>
     
@@ -27,7 +50,6 @@
                         Inicio de Sesión
                     </span>
 
-                    <!-- Modificado de 'email' a 'usuario' -->
                     <div class="wrap-input100 validate-input" data-validate="Valid username is required">
                         <input class="input100" type="text" name="usuario" placeholder="Usuario" required>
                         <span class="focus-input100"></span>
@@ -36,7 +58,6 @@
                         </span>
                     </div>
 
-                    <!-- Modificado de 'pass' a 'contraseña' -->
                     <div class="wrap-input100 validate-input" data-validate="Password is required">
                         <input class="input100" type="password" name="pass" placeholder="Contraseña" required>
                         <span class="focus-input100"></span>
@@ -45,10 +66,18 @@
                         </span>
                     </div>
                     
+                    <!-- Botón para iniciar sesión -->
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn">
                             Iniciar Sesión
                         </button>
+                    </div>
+
+                    <!-- Botón para registrarse con diseño profesional -->
+                    <div class="container-login100-form-btn">
+                        <a href="index.html#pricing" class="register-btn">
+                            Date de Alta
+                        </a>
                     </div>
 
                     <div class="text-center p-t-12">
