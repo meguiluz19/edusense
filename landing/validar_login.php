@@ -61,7 +61,7 @@ if ($result->num_rows === 1) {
     $conn->query($sql_update);
 
     // Redirigir a la página protegida
-    header("Location: dashboard.php");
+    header("Location: dashboard/html/index.html");
     exit;
 } else {
     // Registrar el intento fallido
@@ -89,3 +89,4 @@ if ($result->num_rows === 1) {
 
 $conn->close();
 ?>
+
