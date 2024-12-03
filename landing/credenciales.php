@@ -1,5 +1,4 @@
 <?php
-// Asegúrate de iniciar la sesión para compartir datos entre scripts
 session_start();
 
 // Verifica si las credenciales existen en la sesión
@@ -66,9 +65,14 @@ $password = $_SESSION['password'];
             display: inline-block;
             margin-top: 20px;
         }
-
         .btn:hover {
             background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #007BFF;
+        }
+        .btn-secondary:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -86,6 +90,8 @@ $password = $_SESSION['password'];
 
         <!-- Botón para redirigir al login -->
         <a href="login.html" class="btn">Iniciar Sesión</a>
+        <!-- Botón para redirigir a mailer/index.php -->
+        <a href="mailer/index.php" class="btn btn-secondary">Notificar del Alta</a>
     </div>
 </body>
 </html>
